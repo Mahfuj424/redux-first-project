@@ -11,27 +11,38 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { useAppDispatch } from "@/redux/hooks";
-import { addTodo } from "@/redux/features/todoSlice";
+import { useAddTodoMutation } from "@/redux/api/api";
 
 const AddTodoModal = () => {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
-  const randomId = Math.random().toString(36).substring(2);
-  const dispatch = useAppDispatch();
+  const [priority, setPriority] = useState("");
+  const [addTodo, { data, isError, isLoading, isSuccess }] =
+    useAddTodoMutation();
+  console.log({ data, isError, isLoading, isSuccess });
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     const taskDetails = {
-      id: randomId,
       title: task,
-      description: description,
+      description,
+      iscompleted: false,
+      priority,
     };
-    // console.log(taskDetails);
-    dispatch(addTodo(taskDetails));
+    
+    addTodo(taskDetails);
   };
 
   return (
@@ -70,6 +81,22 @@ const AddTodoModal = () => {
                 placeholder="Tell us a little bit about yourself"
                 className="col-span-3"
               />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Priority</Label>
+              <Select onValueChange={(value) => setPriority(value)}>
+                <SelectTrigger className="col-span-3">
+                  <SelectValue placeholder="Select task priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Priority</SelectLabel>
+                    <SelectItem value="high">High</SelectItem>
+                    <SelectItem value="mediam">Mediam</SelectItem>
+                    <SelectItem value="low">Low</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <DialogFooter>
