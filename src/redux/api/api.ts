@@ -40,9 +40,17 @@ const baseApi = createApi({
       invalidatesTags: ["todo"],
     }),
     deleteTodo: builder.mutation({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `/task/${id}`,
         method: "DELETE",
+      }),
+      invalidatesTags: ["todo"],
+    }),
+    updateTask: builder.mutation({
+      query: (options) => ({
+        url: `/task/${options.id}`,
+        method: "PUT",
+        body: options.data,
       }),
       invalidatesTags: ["todo"],
     }),
@@ -55,5 +63,6 @@ export const {
   useAddTodoMutation,
   useUpdateTodoMutation,
   useDeleteTodoMutation,
+  useUpdateTaskMutation,
 } = baseApi;
 export default baseApi;
